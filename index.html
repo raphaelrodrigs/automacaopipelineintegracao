@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Testes no pipeline de integração</title>
+		<meta name="author" content="Raphael Rodrigues">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="#123e79">
+					<h1>Testes automatizados</h1>
+					<h3>no pipeline de Homologação</h3>
+					---<br>
+                    <small>Criado por <a href="mailto:raphael.silva@softdesign.com.br">Raphael Rodrigues</a></small><br>
+                    <a href="http://www.softdesign.com.br"><img src="img/logosoftdesign.png" width="30%"></a>
+				</section>
+
+				<section data-background="#000">
+					<font color="#fff">
+					<h1>Agenda</h1>
+					Porque o time optou por testes automatizados no ambiente de integração contínua<br><br>
+					Arquitetura / Ambiente<br><br>
+					Próximos passos
+					</font>
+				</section>
+				
+				<section>
+					<section data-background="#80191a">
+						<h3>Você faz automação de teste para ser</h3>
+						<h2>Preventivo ou Reativo?</h2>
+					</section>
+					<section>
+						<h2>O time optou por testes automatizados no ambiente de integração contínua</h2>
+					</section>
+				</section>
+				
+				<section>
+					<section data-background="#139620">
+						<h1>Arquitetura / Ambiente</h1>
+					</section>
+					<section data-background="img/software-pipeline.png">
+					</section>
+					<section data-background="img/ambienteTeste.png">
+					</section>
+				</section>
+
+				<section> 
+					<section data-background="#123e79">
+						<h1>Próximos Passos</h1>
+					</section>
+					<section>
+						Aumentar número de cenários de teste automatizados;<br><br>
+						Setar variável para escolher o ambiente que será testado;<br><br>
+						Instalar plugins de report.
+					</section>
+				</section>
+
+				<section>
+					<h2>Fonte</h2>
+					<small>
+					https://barbaracabral.wordpress.com/2010/05/28/estrategias-de-testes/<br>
+					http://elementalselenium.com/tips/38-headless<br>
+					</small>
+				</section>
+
+				<section>
+					<h1>Obrigado!</h1>
+					<small><a href="mailto:raphael.silva@softdesign.com.br">Raphael Rodrigues</a></small>
+				</section>
+
+				<section>
+					<section data-background="#139620">
+						<h1>Script<br> Selenium x BDD</h1>
+					</section>
+					<section>
+						<h4>Exemplo</h4>
+							<pre><code class="cucumber" data-trim="" contenteditable="">
+--Caso de teste--
+Abrir calculadora
+Clicar em 2 	
+Clicar em +		
+Clicar em 3		
+Clicar em =		
+E a tela exibe 5.
+Fechar Calculadora.
+						</code></pre>
+					</section>
+					<section>
+						<h4>Script Selenium</h4>
+							<pre><code class="cucumber" data-trim="" contenteditable=""> 
+driver.findElement(By.xpath("//input[@id='1']")).click();
+driver.findElement(By.xpath("//input[@id='plus']")).click();
+driver.findElement(By.xpath("//input[@id='6']")).click();
+driver.findElement(By.xpath("//input[@id='equals']")).click();
+String result = driver.findElement(By.xpath("//input[@id='Resultbox']")).getAttribute("value");
+driver.close();
+							</code></pre>
+					</section>
+					<section>
+						<h4>Exemplo</h4>
+							<pre><code class="cucumber" data-trim="" contenteditable="">
+ -- BDD --  
+Dado usuario visualizando a calculadora
+Quando realiza a soma dos valores "v1" e "v2"
+Então a tela exibe "resultado"
+	Exemplo:
+	|valor1 |valor2 |resultado|
+	|2      |3      |5        |
+	|9      |1      |10       |
+						</code></pre>
+					</section>
+					<section>
+						<h4>Cucumber + Selenium</h4>
+							<pre><code class="cucumber" data-trim="" contenteditable=""> 
+@Dado("^usuario visualizando a calculadora$")
+public void usuario_visualizando_a_calculadora(){
+	calc = new RpnCalculator();
+}
+@Quando("^realiza a soma dos valores (\\v1) e (\\v2)$")
+public void realiza_a_soma_dos_valores(int v1, int v2){
+	calc.clicarValor(v1);
+	calc.clicarSoma();
+	calc.clicarValor(v2);
+}
+@Entao("^a tela exibe (\\resultado)$")
+public void a_tela_exibe(int resultado){
+	calc.assertEquals(resultado, calc.value());
+}
+							</code></pre>
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
